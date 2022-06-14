@@ -1,0 +1,67 @@
+x = 112;
+y = 234;
+z = 40;
+intensity = 37;
+arr = [];
+arr = [arr, x y z intensity];
+
+%modify the arr to add in 64 height (total rows)
+%and 1856 minimum in length
+
+%add in 0s for rows
+arr = [arr; zeros(64,size(arr,2))];
+
+%add in 0s for the length to reach min
+NewCol = zeros(65, 1865);
+arr = [arr NewCol];
+
+a = 1
+%saving the array of coordinates to a file
+filedomain = 'pcdList';
+files = ['pcdData.pcd'];
+
+fp = fopen(fullfile(filedomain,files),'w');
+
+%the automation class properties is doing the activities
+%Note: In order to match the pandaSet we will transform the array later
+%-----------------------------
+
+%starting with the header NOTE: Headers will be manipulated if decided to
+%be causing error in order to meet the original raw pcd file specifications
+       fprintf(fp, '# .PCD v.7 - Point Cloud Data file format\n');
+    fprintf(fp, 'VERSION .7\n');
+
+
+   fields = 'x y z Intensity';
+
+    fprintf(fp, 'FIELDS %s\n', fields);
+
+siz = '8 8 8 8';
+    fprintf(fp, 'SIZE %s\n', siz);
+
+ typ = 'F F F F';
+
+    fprintf(fp, 'TYPE %s\n', typ);
+
+count = '1 1 1 1';
+    fprintf(fp, 'COUNT %s\n', count);
+
+%go through the array in terms of width
+        npoints = size(arr, 2);
+        width = npoints;
+    fprintf(fp, 'WIDTH %d\n', width);
+
+height  = size(arr, 1);
+    fprintf(fp, 'HEIGHT %d\n', height);
+
+npoints = width*height;
+    fprintf(fp, 'POINTS %d\n', npoints);
+
+view = '0 0 0 1 0 0 0';
+    fprintf(fp, 'VIEWPOINT %s\n', view);
+DType = 'ascii';
+fprintf(fp, 'DATA %s\n', DType);
+
+%fprintf(fp, arr);
+fprintf(fp,'%.2f %.2f %.2f %.2f \n',arr);
+fclose(fp);
